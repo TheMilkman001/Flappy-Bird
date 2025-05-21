@@ -66,7 +66,7 @@ public class FlappyBirdProject {
             if (gameStart[0]) {
                 // Calculate player positions.
                 double deltaSeconds = deltaTime / 1000.0;
-                playerYVelocity[0] -= 750 * deltaSeconds;
+                playerYVelocity[0] -= 1000 * deltaSeconds;
                 playerY -= playerYVelocity[0] * deltaSeconds;
             } else {
                 // Make the player float up and down until they start.
@@ -96,7 +96,7 @@ public class FlappyBirdProject {
             offscreenGraphics.fillOval(playerX - 5, (int)playerY + 5, 25, 20);
 
             // If it's been a while since the last pipe appeared.
-            if (timer - timeSincePipe >= 10){
+            if (timer - timeSincePipe >= 8){
                 // Update the time since the last pipe appeared.
                 timeSincePipe = timer;
 
@@ -108,7 +108,7 @@ public class FlappyBirdProject {
             offscreenGraphics.setColor(new Color(69, 205, 47)); // Green pipe.
             for (int i = 0; i < pipeX.size(); i += 0){ // "i" doesn't increment here because we need to do it later.
                 offscreenGraphics.fillRect((int)(double)pipeX.get(i), 0, 50, height);
-                pipeX.set(i, pipeX.get(i) - 0.1 * deltaTime);
+                pipeX.set(i, pipeX.get(i) - 0.12 * deltaTime);
 
                 // If the pipe is off-screen, delete.
                 // Increment "i" only if a pipe isn't deleted.
