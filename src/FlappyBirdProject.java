@@ -101,20 +101,24 @@ public class FlappyBirdProject {
                 timeSincePipe = timer;
 
                 // Add a new pipe to the two dynamic arrays.
-                pipeX.add((double)width + 50);
-                pipeY.add((int)((Math.random() - 0.5) * height));
+                pipeX.add((double)width + 50); // Adds a pipe offscreen to the right.
+                pipeY.add((int)((Math.random() - 0.5) * height/2) + height/2); // Gives the pipe a random y position.
             }
             // Draws the pipes on the buffered image.
             offscreenGraphics.setColor(new Color(69, 205, 47)); // Green pipe.
             for (int i = 0; i < pipeX.size(); i += 0){ // "i" doesn't increment here because we need to do it later.
-                offscreenGraphics.fillRect((int)(double)pipeX.get(i), 0, 50, height);
-                pipeX.set(i, pipeX.get(i) - 0.12 * deltaTime);
+                // Draws the top pipe at the pipe's y position - 65.
+                offscreenGraphics.fillRect((int)(double)pipeX.get(i), 0, 50, pipeY.get(i) - 65);
+                // Draws the bottom pipe at the pipe's y position + 65.
+                offscreenGraphics.fillRect((int)(double)pipeX.get(i), pipeY.get(i) + 65, 50, height);
+                pipeX.set(i, pipeX.get(i) - 0.12 * deltaTime); // Scrolls the pipe over to the left.
 
                 // If the pipe is off-screen, delete.
                 // Increment "i" only if a pipe isn't deleted.
                 // This is because deleting a pipe shifts the whole array anyway.
-                if (pipeX.get(i) < -50){
-                    pipeX.remove(i);
+                if (pipeX.get(i) < -70){
+                    pipeX.remove(i); // Removes the pipe from memory.
+                    pipeY.remove(i);
                 } else {
                     i++;
                 }
