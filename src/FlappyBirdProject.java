@@ -7,7 +7,7 @@ import java.util.List; // Supplemental list.
 
 public class FlappyBirdProject {
     // Define the refresh rate of the game. Fixed.
-    public static final int frameRate = 30; // In frames per second.
+    public static final int frameRate = 60; // In frames per second.
 
     public static void main(String[] args) {
         // Define the resolution of the game.
@@ -105,12 +105,14 @@ public class FlappyBirdProject {
                 pipeY.add((int)((Math.random() - 0.5) * height/2) + height/2); // Gives the pipe a random y position.
             }
             // Draws the pipes on the buffered image.
-            offscreenGraphics.setColor(new Color(69, 205, 47)); // Green pipe.
+            offscreenGraphics.setColor(new Color(46, 189, 26)); // Green pipe.
             for (int i = 0; i < pipeX.size(); i += 0){ // "i" doesn't increment here because we need to do it later.
                 // Draws the top pipe at the pipe's y position - 65.
                 offscreenGraphics.fillRect((int)(double)pipeX.get(i), 0, 50, pipeY.get(i) - 65);
+                offscreenGraphics.fillRect((int)(double)pipeX.get(i) - 7, pipeY.get(i) - 65 - 25, 64, 25);
                 // Draws the bottom pipe at the pipe's y position + 65.
                 offscreenGraphics.fillRect((int)(double)pipeX.get(i), pipeY.get(i) + 65, 50, height);
+                offscreenGraphics.fillRect((int)(double)pipeX.get(i) - 7, pipeY.get(i) + 65, 64, 25);
                 pipeX.set(i, pipeX.get(i) - 0.12 * deltaTime); // Scrolls the pipe over to the left.
 
                 // If the pipe is off-screen, delete.
