@@ -130,7 +130,7 @@ public class  FlappyBirdProject {
                 // these declate the birds hit box
                 int birdTop = (int)playerY;
                 int birdBottom = birdTop + playerHeight;
-                int birdLeft = playerX;
+                int birdLeft = playerX; // It says redundant but only seems to work if it's here
                 int birdRight = birdLeft + playerWidth;
 
                 if (birdRight > pipeLeft && birdLeft < pipeRight) {
@@ -145,7 +145,7 @@ public class  FlappyBirdProject {
                         System.exit(0);
                     }
                     else {
-                        score += 1; // FIXME Scores are tied to framerate 
+                        score += 1; // FIXME Scores are tied to framerate
                     }
                 }
 
