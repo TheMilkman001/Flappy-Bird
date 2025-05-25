@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage; // Buffered image to draw images off-screen
 import java.util.ArrayList; // Imports dynamic arrays for tracking various pipes.
 import java.util.List; // Supplemental list.
 
-public class FlappyBirdProject {
+public class  FlappyBirdProject {
     // Define the refresh rate of the game. Fixed.
     public static final int frameRate = 60; // In frames per second.
 
@@ -36,6 +36,8 @@ public class FlappyBirdProject {
         boolean[] gameStart = {false}; // Used to track when the player presses space to start the game.
         List<Double> pipeX = new ArrayList<>(); // Tracks the x positions of pipes.
         List<Integer> pipeY = new ArrayList<>(); // Tracks the y positions of pipes.
+        int score = 0; // Tracks player score
+        int Highscore = 0; // Tracks highscore. I will find a way to store this in a form of save file later. 5/25 JB
 
         // The player's controls. Just press space to fly.
         panel.onKeyDown((key) -> {
@@ -115,6 +117,38 @@ public class FlappyBirdProject {
                 offscreenGraphics.fillRect((int)(double)pipeX.get(i) - 7, pipeY.get(i) + 65, 64, 25);
                 pipeX.set(i, pipeX.get(i) - 0.12 * deltaTime); // Scrolls the pipe over to the left.
 
+                // Pipe collision 5/25 JB
+                // This could use some tweaking detection box wise.
+                int playerWidth = 40;  // the next couple of lines declare the bounds
+                int playerHeight = 35;
+                int pipeLeft = (int)(double)pipeX.get(i);
+                int pipeRight = pipeLeft + 50;
+                int gap = 130; // this indicated the acceptable area for the player to pass through
+                int pipeGapY = pipeY.get(i); // this gets the location of the acceptable area
+
+
+                // these declate the birds hit box
+                int birdTop = (int)playerY;
+                int birdBottom = birdTop + playerHeight;
+                int birdLeft = playerX;
+                int birdRight = birdLeft + playerWidth;
+
+                if (birdRight > pipeLeft && birdLeft < pipeRight) {
+                    if (birdTop < pipeGapY - gap / 2 || birdBottom > pipeGapY + gap / 2) {
+
+                        if (score > Highscore){ // replaces highscore if needed
+                            Highscore = score;
+                        }
+
+                        System.out.println("Game Over - Hit Pipe");
+                        System.out.println("Score: "+ score);
+                        System.exit(0);
+                    }
+                    else {
+                        score += 1; // FIXME Scores are tied to framerate 
+                    }
+                }
+
                 // If the pipe is off-screen, delete.
                 // Increment "i" only if a pipe isn't deleted.
                 // This is because deleting a pipe shifts the whole array anyway.
@@ -128,6 +162,16 @@ public class FlappyBirdProject {
 
             // Copy the off-screen image to the actual screen.
             window.drawImage(offscreenImage, 0, 0, null);
+
+            // Additional ground collision 5/25 JB
+            if (playerY < 0 || playerY + 35 > height) {
+                System.out.println("Game Over - Can't fly?");
+
+                if (score > Highscore){ // replaces highscore if needed
+                    Highscore = score;
+                }
+                System.exit(0);
+            }
 
             // Wait the specified refresh rate.
             panel.sleep(deltaTime);
