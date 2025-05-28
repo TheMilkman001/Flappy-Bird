@@ -36,8 +36,9 @@ public class  FlappyBirdProject {
         boolean[] gameStart = {false}; // Used to track when the player presses space to start the game.
         List<Double> pipeX = new ArrayList<>(); // Tracks the x positions of pipes.
         List<Integer> pipeY = new ArrayList<>(); // Tracks the y positions of pipes.
+        List<Boolean> passedPipe = new ArrayList<>(); // Checks if the player has passed the pipe yet.
         int score = 0; // Tracks player score
-        int Highscore = 0; // Tracks highscore. I will find a way to store this in a form of save file later. 5/25 JB
+        int highscore = 0; // Tracks highscore. I will find a way to store this in a form of save file later. 5/25 JB
 
         // The player's controls. Just press space to fly.
         panel.onKeyDown((key) -> {
@@ -105,6 +106,7 @@ public class  FlappyBirdProject {
                 // Add a new pipe to the two dynamic arrays.
                 pipeX.add((double)width + 50); // Adds a pipe offscreen to the right.
                 pipeY.add((int)((Math.random() - 0.5) * height/2) + height/2); // Gives the pipe a random y position.
+                passedPipe.add(false); // Adds a false boolean to a pipe, meaning it hasn't passed yet.
             }
             // Draws the pipes on the buffered image.
             offscreenGraphics.setColor(new Color(46, 189, 26)); // Green pipe.
@@ -119,34 +121,36 @@ public class  FlappyBirdProject {
 
                 // Pipe collision 5/25 JB
                 // This could use some tweaking detection box wise.
-                int playerWidth = 40;  // the next couple of lines declare the bounds
+                int playerWidth = 40;  // The next couple of lines declare the bounds
                 int playerHeight = 35;
                 int pipeLeft = (int)(double)pipeX.get(i);
                 int pipeRight = pipeLeft + 50;
-                int gap = 130; // this indicated the acceptable area for the player to pass through
-                int pipeGapY = pipeY.get(i); // this gets the location of the acceptable area
+                int gap = 130; // This indicated the acceptable area for the player to pass through
+                int pipeGapY = pipeY.get(i); // This gets the location of the acceptable area
 
-
-                // these declate the birds hit box
+                // These declare the birds hit box
                 int birdTop = (int)playerY;
                 int birdBottom = birdTop + playerHeight;
                 int birdLeft = playerX; // It says redundant but only seems to work if it's here
                 int birdRight = birdLeft + playerWidth;
 
+                // Collision check for the hitboxes.
                 if (birdRight > pipeLeft && birdLeft < pipeRight) {
                     if (birdTop < pipeGapY - gap / 2 || birdBottom > pipeGapY + gap / 2) {
-
-                        if (score > Highscore){ // replaces highscore if needed
-                            Highscore = score;
-                        }
-
+                        // Print stuff and end the game.
                         System.out.println("Game Over - Hit Pipe");
                         System.out.println("Score: "+ score);
                         System.exit(0);
                     }
-                    else {
-                        score += 1; // FIXME Scores are tied to framerate
+                }
+
+                // Increments score. Uses a boolean array to check if the pipe has already passed.
+                if (birdRight > pipeRight && !passedPipe.get(i)){
+                    score++;
+                    if (score > highscore){ // Replaces highscore if needed.
+                        highscore = score;
                     }
+                    passedPipe.set(i, true);
                 }
 
                 // If the pipe is off-screen, delete.
@@ -155,6 +159,7 @@ public class  FlappyBirdProject {
                 if (pipeX.get(i) < -70){
                     pipeX.remove(i); // Removes the pipe from memory.
                     pipeY.remove(i);
+                    passedPipe.remove(i);
                 } else {
                     i++;
                 }
@@ -166,11 +171,13 @@ public class  FlappyBirdProject {
             // Additional ground collision 5/25 JB
             if (playerY < 0 || playerY + 35 > height) {
                 System.out.println("Game Over - Can't fly?");
-
-                if (score > Highscore){ // replaces highscore if needed
-                    Highscore = score;
+                if (score > highscore){ // Replaces highscore if needed
+                    highscore = score;
                 }
-                System.exit(0);
+                gameStart[0] = false;
+                pipeX.clear();
+                pipeY.clear();
+                passedPipe.clear();
             }
 
             // Wait the specified refresh rate.
