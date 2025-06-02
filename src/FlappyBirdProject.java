@@ -139,8 +139,11 @@ public class  FlappyBirdProject {
                     if (birdTop < pipeGapY - gap / 2 || birdBottom > pipeGapY + gap / 2) {
                         // Print stuff and end the game.
                         System.out.println("Game Over - Hit Pipe");
-                        System.out.println("Score: "+ score);
-                        System.exit(0);
+                        System.out.println("Score: " + score);
+                        panel.sleep(1000); // Freeze for 1 second.
+                        restartGame(score, highscore, gameStart, pipeX, pipeY, passedPipe);
+                        score = 0; // Reset the score.
+                        break; // Breaks out of the for loop to prevent index errors.
                     }
                 }
 
@@ -171,17 +174,24 @@ public class  FlappyBirdProject {
             // Additional ground collision 5/25 JB
             if (playerY < 0 || playerY + 35 > height) {
                 System.out.println("Game Over - Can't fly?");
-                if (score > highscore){ // Replaces highscore if needed
-                    highscore = score;
-                }
-                gameStart[0] = false;
-                pipeX.clear();
-                pipeY.clear();
-                passedPipe.clear();
+                panel.sleep(1000); // Freeze for 1 second.
+                restartGame(score, highscore, gameStart, pipeX, pipeY, passedPipe);
+                score = 0; // Reset the score.
             }
 
             // Wait the specified refresh rate.
             panel.sleep(deltaTime);
         }
+    }
+
+    // Restarts the game by clearing pipe lists.
+    public static void restartGame(int score, int highscore, boolean[] gameStart, List<Double> pipeX, List<Integer> pipeY, List<Boolean> passedPipe){
+        if (score > highscore){ // Replaces highscore if needed.
+            highscore = score;
+        }
+        gameStart[0] = false;
+        pipeX.clear();
+        pipeY.clear();
+        passedPipe.clear();
     }
 }
