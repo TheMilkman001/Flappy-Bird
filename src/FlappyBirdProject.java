@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent; // Used to track which keys are pressed.
 import java.awt.image.BufferedImage; // Buffered image to draw images off-screen, then display them smoothly.
 import java.util.ArrayList; // Imports dynamic arrays for tracking various pipes.
 import java.util.List; // Supplemental list.
+import java.util.Scanner; // Reading the HS.
+import java.io.*; // IO for score saving.
 
 public class  FlappyBirdProject {
     // Define the refresh rate of the game. Fixed.
@@ -38,7 +40,7 @@ public class  FlappyBirdProject {
         List<Integer> pipeY = new ArrayList<>(); // Tracks the y positions of pipes.
         List<Boolean> passedPipe = new ArrayList<>(); // Checks if the player has passed the pipe yet.
         int score = 0; // Tracks player score
-        int highscore = 0; // Tracks highscore. I will find a way to store this in a form of save file later. 5/25 JB
+        int highscore = loadHighScore(); // new function reads the file for highscore
 
         // The player's controls. Just press space to fly.
         panel.onKeyDown((key) -> {
@@ -139,7 +141,7 @@ public class  FlappyBirdProject {
                     if (birdTop < pipeGapY - gap / 2 || birdBottom > pipeGapY + gap / 2) {
                         // Print stuff and end the game.
                         System.out.println("Game Over - Hit Pipe");
-                        System.out.println("Score: " + score);
+                        System.out.println("Highscore: " + highscore + " | Score: " + score );
                         panel.sleep(1000); // Freeze for 1 second.
                         restartGame(score, highscore, gameStart, pipeX, pipeY, passedPipe);
                         score = 0; // Reset the score.
@@ -152,6 +154,7 @@ public class  FlappyBirdProject {
                     score++;
                     if (score > highscore){ // Replaces highscore if needed.
                         highscore = score;
+                        saveHighScore(highscore);
                     }
                     passedPipe.set(i, true);
                 }
@@ -174,6 +177,7 @@ public class  FlappyBirdProject {
             // Additional ground collision 5/25 JB
             if (playerY < 0 || playerY + 35 > height) {
                 System.out.println("Game Over - Can't fly?");
+                System.out.println("Highscore: " + highscore + " | Score: " + score );
                 panel.sleep(1000); // Freeze for 1 second.
                 restartGame(score, highscore, gameStart, pipeX, pipeY, passedPipe);
                 score = 0; // Reset the score.
@@ -186,12 +190,43 @@ public class  FlappyBirdProject {
 
     // Restarts the game by clearing pipe lists.
     public static void restartGame(int score, int highscore, boolean[] gameStart, List<Double> pipeX, List<Integer> pipeY, List<Boolean> passedPipe){
-        if (score > highscore){ // Replaces highscore if needed.
+        if (score > highscore){ // Replaces high score if needed.
             highscore = score;
+            saveHighScore(score);
         }
         gameStart[0] = false;
         pipeX.clear();
         pipeY.clear();
         passedPipe.clear();
+    }
+
+    // Reading HS from score file
+    public static int loadHighScore() {
+        try {
+            File file = new File("Highscore.txt");
+            if (file.exists()) {
+                Scanner scanner = new Scanner(file);
+                int score = scanner.nextInt();
+                return score;
+            }
+            else {
+                System.out.println("Invalid File. returning to 0.");
+                return 0;
+            }
+
+        } catch (IOException | NumberFormatException e){
+            System.out.println("Error reading save file.");
+        }
+        return 0;
+    }
+
+    // Writing HS if more than current.
+    public static void saveHighScore(int score) {
+        try (FileWriter writer = new FileWriter("Highscore.txt")) {
+            writer.write(String.valueOf(score));
+            // writer.close() is called automatically
+        } catch (IOException e) {
+            System.out.println("Error writing high score: " + e.getMessage());
+        }
     }
 }
