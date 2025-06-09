@@ -171,6 +171,18 @@ public class  FlappyBirdProject {
                 }
             }
 
+            // UI Code.
+            offscreenGraphics.setColor(new Color(255, 255, 255)); // White text.
+            offscreenGraphics.setFont(new Font("UI Font", Font.BOLD, 25)); // Sets a basic font.
+            offscreenGraphics.drawString("Highscore: " + highscore, 5, 30); // Draws highscore.
+            if (!gameStart[0]) { // If the game has started, show the score text.
+                offscreenGraphics.drawString("[Space] to fly", width / 2 - 85, 100);
+            } else { // If the game has not started yet, show instructions.
+                offscreenGraphics.setFont(new Font("SanSerif", Font.BOLD, 75)); // Makes the font smaller.
+                String scoreString = Integer.toString(score); // Converts the integer score to a string.
+                offscreenGraphics.drawString(scoreString, width / 2 - scoreString.length() * 75 / 3, 100);
+            }
+
             // Copy the off-screen image to the actual screen.
             window.drawImage(offscreenImage, 0, 0, null);
 
