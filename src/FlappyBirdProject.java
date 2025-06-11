@@ -41,6 +41,8 @@ public class  FlappyBirdProject {
         List<Boolean> passedPipe = new ArrayList<>(); // Checks if the player has passed the pipe yet.
         int score = 0; // Tracks player score
         int highscore = loadHighScore(); // new function reads the file for highscore
+        Color pipe1 = new Color(46, 189, 26); // The darker green pipe color.
+        Color pipe2 = new Color(76, 227, 58); // THe lighter green pipe color.
 
         // The player's controls. Just press space to fly.
         panel.onKeyDown((key) -> {
@@ -111,15 +113,33 @@ public class  FlappyBirdProject {
                 passedPipe.add(false); // Adds a false boolean to a pipe, meaning it hasn't passed yet.
             }
             // Draws the pipes on the buffered image.
-            offscreenGraphics.setColor(new Color(46, 189, 26)); // Green pipe.
             for (int i = 0; i < pipeX.size(); i += 0){ // "i" doesn't increment here because we need to do it later.
+                offscreenGraphics.setColor(pipe1); // Green pipe.
                 // Draws the top pipe at the pipe's y position - 65.
                 offscreenGraphics.fillRect((int)(double)pipeX.get(i), 0, 50, pipeY.get(i) - 65);
-                offscreenGraphics.fillRect((int)(double)pipeX.get(i) - 7, pipeY.get(i) - 65 - 25, 64, 25);
                 // Draws the bottom pipe at the pipe's y position + 65.
                 offscreenGraphics.fillRect((int)(double)pipeX.get(i), pipeY.get(i) + 65, 50, height);
+
+                offscreenGraphics.setColor(pipe2); // Light green pipe.
+                // Draws the top pipe's highlights.
+                offscreenGraphics.fillRect((int)(double)pipeX.get(i) + 10, 0, 25, pipeY.get(i) - 65);
+                // Draws the bottom pipe's highlights.
+                offscreenGraphics.fillRect((int)(double)pipeX.get(i) + 10, pipeY.get(i) + 65, 25, height);
+
+                offscreenGraphics.setColor(pipe1); // Green pipe.
+                // Draws the top pipe cap.
+                offscreenGraphics.fillRect((int)(double)pipeX.get(i) - 7, pipeY.get(i) - 65 - 25, 64, 25);
+                // Draws the bottom pipe cap.
                 offscreenGraphics.fillRect((int)(double)pipeX.get(i) - 7, pipeY.get(i) + 65, 64, 25);
-                pipeX.set(i, pipeX.get(i) - 0.12 * deltaTime); // Scrolls the pipe over to the left.
+
+                offscreenGraphics.setColor(pipe2); // Light green pipe.
+                // Draws the top pipe cap's highlights.
+                offscreenGraphics.fillRect((int)(double)pipeX.get(i) + 3, pipeY.get(i) - 65 - 25, 28, 25);
+                // Draws the bottom pipe cap's highlights.
+                offscreenGraphics.fillRect((int)(double)pipeX.get(i) + 3, pipeY.get(i) + 65, 28, 25);
+
+                // Scrolls the pipe over to the left.
+                pipeX.set(i, pipeX.get(i) - 0.12 * deltaTime);
 
                 // Pipe collision 5/25 JB
                 // This could use some tweaking detection box wise.
