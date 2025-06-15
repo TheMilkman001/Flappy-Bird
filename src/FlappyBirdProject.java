@@ -10,6 +10,7 @@ import java.io.*; // IO for score saving.
 public class  FlappyBirdProject {
     // Define the refresh rate of the game. Fixed.
     public static final int frameRate = 60; // In frames per second.
+    public static boolean dead = false; // Used to track if the player is dead or not.
 
     public static void main(String[] args) {
         // Define the resolution of the game.
@@ -159,12 +160,7 @@ public class  FlappyBirdProject {
                 // Collision check for the hitboxes.
                 if (birdRight > pipeLeft && birdLeft < pipeRight) {
                     if (birdTop < pipeGapY - gap / 2 || birdBottom > pipeGapY + gap / 2) {
-                        // Print stuff and end the game.
-                        System.out.println("Game Over - Hit Pipe");
-                        System.out.println("Highscore: " + highscore + " | Score: " + score );
-                        panel.sleep(1000); // Freeze for 1 second.
-                        restartGame(score, highscore, gameStart, pipeX, pipeY, passedPipe);
-                        score = 0; // Reset the score.
+                        dead = true; // Set dead to true if the player is out of bounds.
                         break; // Breaks out of the for loop to prevent index errors.
                     }
                 }
@@ -195,12 +191,24 @@ public class  FlappyBirdProject {
             offscreenGraphics.setColor(new Color(255, 255, 255)); // White text.
             offscreenGraphics.setFont(new Font("UI Font", Font.BOLD, 25)); // Sets a basic font.
             offscreenGraphics.drawString("Highscore: " + highscore, 5, 30); // Draws highscore.
-            if (!gameStart[0]) { // If the game has started, show the score text.
+            if (!gameStart[0] && !dead) { // If the game has started, show the score text.
                 offscreenGraphics.drawString("[Space] to fly", width / 2 - 85, 100);
-            } else { // If the game has not started yet, show instructions.
+            } else if (!dead){ // If the game has not started yet, show instructions.
                 offscreenGraphics.setFont(new Font("SanSerif", Font.BOLD, 75)); // Makes the font smaller.
                 String scoreString = Integer.toString(score); // Converts the integer score to a string.
                 offscreenGraphics.drawString(scoreString, width / 2 - scoreString.length() * 75 / 3, 100);
+            }
+
+            if (dead) {
+                offscreenGraphics.setColor(new Color(255, 255, 255)); // White text.
+                offscreenGraphics.setFont(new Font("UI Font", Font.BOLD, 25)); // Sets a basic font.
+                offscreenGraphics.drawString("Your Score: " + score, width / 2 - 12 , height / 2 + 50);
+                offscreenGraphics.drawString("You're Dead", width / 2 - 11, height / 2);
+                System.out.println("Highscore: " + highscore + " | Score: " + score );
+                window.drawImage(offscreenImage, 0, 0, null);
+                panel.sleep(3000); // Freeze for 1 second.
+                restartGame(score, highscore, gameStart, pipeX, pipeY, passedPipe);
+                score = 0; // Reset the score.
             }
 
             // Copy the off-screen image to the actual screen.
@@ -209,10 +217,7 @@ public class  FlappyBirdProject {
             // Additional ground collision 5/25 JB
             if (playerY < 0 || playerY + 35 > height) {
                 System.out.println("Game Over - Can't fly?");
-                System.out.println("Highscore: " + highscore + " | Score: " + score );
-                panel.sleep(1000); // Freeze for 1 second.
-                restartGame(score, highscore, gameStart, pipeX, pipeY, passedPipe);
-                score = 0; // Reset the score.
+                dead = true; // Set dead to true if the player is out of bounds.
             }
 
             // Wait the specified refresh rate.
@@ -222,6 +227,8 @@ public class  FlappyBirdProject {
 
     // Restarts the game by clearing pipe lists.
     public static void restartGame(int score, int highscore, boolean[] gameStart, List<Double> pipeX, List<Integer> pipeY, List<Boolean> passedPipe){
+        dead = false; // Resets dead to false.
+
         if (score > highscore){ // Replaces high score if needed.
             highscore = score;
             saveHighScore(score);
