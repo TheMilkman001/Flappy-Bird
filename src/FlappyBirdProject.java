@@ -40,7 +40,7 @@ public class  FlappyBirdProject {
         List<Double> pipeX = new ArrayList<>(); // Tracks the x positions of pipes.
         List<Integer> pipeY = new ArrayList<>(); // Tracks the y positions of pipes.
         List<Boolean> passedPipe = new ArrayList<>(); // Checks if the player has passed the pipe yet.
-        int score = 0; // Tracks player score
+        Integer score = 0; // Tracks player score
         int highscore = loadHighScore(); // new function reads the file for highscore
         Color pipe1 = new Color(46, 189, 26); // The darker green pipe color.
         Color pipe2 = new Color(76, 227, 58); // THe lighter green pipe color.
@@ -197,13 +197,19 @@ public class  FlappyBirdProject {
                 offscreenGraphics.setFont(new Font("SanSerif", Font.BOLD, 75)); // Makes the font smaller.
                 String scoreString = Integer.toString(score); // Converts the integer score to a string.
                 offscreenGraphics.drawString(scoreString, width / 2 - scoreString.length() * 75 / 3, 100);
+                /* Useless score display code that displays in top left.
+                offscreenGraphics.setColor(new Color(255, 255, 255)); // White text.
+                offscreenGraphics.setFont(new Font("UI Font", Font.BOLD, 25)); // Sets a basic font.
+                offscreenGraphics.drawString("Score: " + score, width - 125, 30); // Draws score.
+                */
             }
 
+            // Simplified death code and displays death screen.
             if (dead) {
                 offscreenGraphics.setColor(new Color(255, 255, 255)); // White text.
                 offscreenGraphics.setFont(new Font("UI Font", Font.BOLD, 25)); // Sets a basic font.
-                offscreenGraphics.drawString("Your Score: " + score, width / 2 - 12 , height / 2 + 50);
-                offscreenGraphics.drawString("You're Dead", width / 2 - 11, height / 2);
+                offscreenGraphics.drawString("Your Score: " + score, width / 2 - (10 + score.toString().length())  * 25 / 3 , height / 2 );
+                offscreenGraphics.drawString("Game Over", width / 2 - 9 * 25 / 3, height / 2 - 50);
                 System.out.println("Highscore: " + highscore + " | Score: " + score );
                 window.drawImage(offscreenImage, 0, 0, null);
                 panel.sleep(3000); // Freeze for 1 second.
