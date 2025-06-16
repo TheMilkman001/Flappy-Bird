@@ -225,8 +225,7 @@ public class  FlappyBirdProject {
             window.drawImage(offscreenImage, 0, 0, null);
 
             // Additional ground collision 5/25 JB
-            if (playerY < 0 || playerY + 35 > height) {
-                System.out.println("Game Over - Can't fly?");
+            if (playerY < 0 || playerY + 35 > height){
                 dead = true; // Set dead to true if the player is out of bounds.
             }
 
