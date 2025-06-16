@@ -100,8 +100,12 @@ public class  FlappyBirdProject {
             offscreenGraphics.fillOval(playerX, (int)playerY, 40, 35);
             offscreenGraphics.setColor(new Color(240, 102, 38)); // Orange-red beak.
             offscreenGraphics.fillOval(playerX + 20, (int)playerY + 18, 25, 15);
-            offscreenGraphics.setColor(new Color(249, 231, 174));
+            offscreenGraphics.setColor(new Color(249, 231, 174)); // Cream wing.
             offscreenGraphics.fillOval(playerX - 5, (int)playerY + 5, 25, 20);
+            offscreenGraphics.setColor(new Color(255, 255, 255)); // white eye.
+            offscreenGraphics.fillOval(playerX + 20, (int)playerY + 5, 18, 18);
+            offscreenGraphics.setColor(new Color(0, 0, 0)); // black pupil.
+            offscreenGraphics.fillOval(playerX + 32, (int)playerY + 12, 6, 6);
 
             // If it's been a while since the last pipe appeared.
             if (timer - timeSincePipe >= 8){
