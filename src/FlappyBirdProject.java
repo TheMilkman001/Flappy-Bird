@@ -259,8 +259,8 @@ public class  FlappyBirdProject {
                 return 0;
             }
 
-        } catch (IOException | NumberFormatException e){
-            System.out.println("Error reading save file.");
+        } catch (Exception e){
+            System.out.println("Error reading save file returning to 0.");
         }
         return 0;
     }
